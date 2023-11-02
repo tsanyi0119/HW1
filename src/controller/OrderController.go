@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"go_gin_example/database"
 )
 
 type Order struct {
@@ -12,8 +13,8 @@ type Order struct {
 
 // 查詢客戶的訂單清單
 func GetCustomerOrders(c *gin.Context) {
-	db := connectDB()
-	defer closeDB(db)
+	db := database.ConnectDB()
+	defer database.CloseDB(db)
 
 	customerID := c.Param("customer_id")
 

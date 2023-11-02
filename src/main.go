@@ -3,18 +3,17 @@ package main
 import (
 	"fmt"
 	"go_gin_example/controller"
+	"go_gin_example/database"
 	"go_gin_example/envconfig"
 	"log"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
 
 func main() {
 
 	// 創建資料表
-	// creatwTable()
+	// createTable()
 	// 刪除資料表
 	// dropFakeData()
 	// 創建假資料
@@ -35,21 +34,14 @@ func main() {
 		log.Fatalln(err.Error())
 		return
 	}
-	
+
 }
 
 // 創建資料表
 func createTable() {
-	// 設定 PostgreSQL 連線資訊
-	var dsn string = fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=Asia/Taipei",
-		envconfig.GetEnv("DB_HOST"), envconfig.GetEnv("DB_USER"), envconfig.GetEnv("DB_PASSWORD"), envconfig.GetEnv("DB_NAME"), envconfig.GetEnv("DB_PORT"), envconfig.GetEnv("DB_WITH_SSL"))
 
-	// 連線到 PostgreSQL 資料庫
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		panic("無法連線到資料庫")
-	}
+	var db = database.ConnectDB()
+	defer database.CloseDB(db)
 
 	// 建立資料表
 	db.AutoMigrate(&controller.Product{}, &controller.Category{}, &controller.Customer{}, &controller.Order{}, &controller.Item{}) // 使用控制器中的結構
@@ -64,15 +56,8 @@ func createTable() {
 
 // 創建假資料
 func createFakeData() {
-	var dsn string = fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=Asia/Taipei",
-		envconfig.GetEnv("DB_HOST"), envconfig.GetEnv("DB_USER"), envconfig.GetEnv("DB_PASSWORD"), envconfig.GetEnv("DB_NAME"), envconfig.GetEnv("DB_PORT"), envconfig.GetEnv("DB_WITH_SSL"))
 
-	// 連線到 PostgreSQL 資料庫
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		panic("無法連線到資料庫")
-	}
+	var db = database.ConnectDB()
 
 	// 創建10筆商品資料
 	for i := 1; i <= 10; i++ {
@@ -128,15 +113,8 @@ func createFakeData() {
 
 // 刪除資料表
 func dropFakeData() {
-	var dsn string = fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=Asia/Taipei",
-		envconfig.GetEnv("DB_HOST"), envconfig.GetEnv("DB_USER"), envconfig.GetEnv("DB_PASSWORD"), envconfig.GetEnv("DB_NAME"), envconfig.GetEnv("DB_PORT"), envconfig.GetEnv("DB_WITH_SSL"))
 
-	// 連線到 PostgreSQL 資料庫
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		panic("無法連線到資料庫")
-	}
+	var db = database.ConnectDB()
 
 	migrator := db.Migrator()
 

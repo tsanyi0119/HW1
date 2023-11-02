@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"go_gin_example/database"
 )
 
 type Customer struct {
@@ -11,8 +12,8 @@ type Customer struct {
 
 // 查詢客戶清單
 func GetCustomers(c *gin.Context) {
-	db := connectDB()
-	defer closeDB(db)
+	db := database.ConnectDB()
+	defer database.CloseDB(db)
 
 	var customers []Customer
 
