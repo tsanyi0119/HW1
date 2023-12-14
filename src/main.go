@@ -7,19 +7,26 @@ import (
 	"go_gin_example/envconfig"
 	"log"
 
+	"github.com/gin-contrib/cors" // 引入CORS中間件
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-
 	// 創建資料表
 	// createTable()
 	// 刪除資料表
 	// dropFakeData()
 	// 創建假資料
-	// createFakeData()
+	createFakeData()
 
 	server := gin.Default()
+
+	// 使用CORS中間件
+	server.Use(cors.New(cors.Config{
+		AllowOrigins: []string{"http://localhost:3001"}, // 允許的來源
+		AllowMethods: []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders: []string{"Content-Type"},
+	}))
 
 	// 查詢商品清單
 	server.GET("/products", controller.GetProducts)
@@ -34,9 +41,7 @@ func main() {
 		log.Fatalln(err.Error())
 		return
 	}
-
 }
-
 // 創建資料表
 func createTable() {
 
