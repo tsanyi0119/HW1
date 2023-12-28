@@ -29,3 +29,32 @@ func GetCustomerOrders(c *gin.Context) {
 
 	c.JSON(200, orders)
 }
+
+// 新增訂單
+func CreateOrder(c *gin.Context) {
+	db := database.ConnectDB()
+	defer database.CloseDB(db)
+
+	var inputOrder Order
+
+	// 解析請求中的 JSON 數據到 inputOrder
+	if err := c.ShouldBindJSON(&inputOrder); err != nil {
+		c.JSON(400, gin.H{
+			"message": "請提供有效的訂單數據",
+		})
+		return
+	}
+
+	// 將訂單信息插入到數據庫
+	if err := db.Create(&inputOrder).Error; err != nil {
+		c.JSON(500, gin.H{
+			"message": "新增訂單失敗: " + err.Error(),
+		})
+		return
+	}
+
+	c.JSON(201, gin.H{
+		"message": "訂單新增成功",
+		"data":    inputOrder,
+	})
+}

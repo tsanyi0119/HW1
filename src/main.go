@@ -23,20 +23,23 @@ func main() {
 
 	// 使用CORS中間件
 	server.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"http://localhost:3001"}, // 允許的來源
-		AllowMethods: []string{"GET", "POST", "PUT", "DELETE"},
+		AllowOrigins: []string{"http://localhost:3000","http://localhost:8080"}, // 允許的來源
+		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"},
 		AllowHeaders: []string{"Content-Type"},
 	}))
 
 	// 查詢商品清單
 	server.GET("/products", controller.GetProducts)
+	server.POST("/products/add", controller.CreateProduct)
+	server.DELETE("/products/delete/:id", controller.DeleteProduct)
+	server.PATCH("/products/revise/:id", controller.UpdateProductPrice)
 	// 查詢客戶清單
 	server.GET("/customers", controller.GetCustomers)
 	// 查詢客戶的訂單清單
 	server.GET("/customers/:customer_id/orders", controller.GetCustomerOrders)
 	// 查詢訂單的明細
 	server.GET("/orders/:order_id/items", controller.GetOrderDetails)
-
+	server.POST("/orders/add", controller.CreateOrder)
 	if err := server.Run(":" + envconfig.GetEnv("PORT")); err != nil {
 		log.Fatalln(err.Error())
 		return
