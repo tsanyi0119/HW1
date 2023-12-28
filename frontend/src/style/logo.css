@@ -1,0 +1,10 @@
+/* 放大字體 */
+.custom-brand {
+    font-size: 1.5em; /* 調整字體大小，根據需要調整數值 */
+  }
+  
+  /* 變更字體樣式 */
+  .custom-brand:hover {
+    font-weight: bold; /* 鼠標懸停時變為粗體，根據需要調整數值 */
+    color: #ff6600; /* 變更字體顏色，根據需要調整顏色值 */
+  }
